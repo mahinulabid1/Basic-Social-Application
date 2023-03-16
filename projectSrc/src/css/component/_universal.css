@@ -1,0 +1,26 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+a{
+    text-decoration:none;
+}
+
+a:link,
+a:visited{
+    color:black;
+}
+a:hover,
+a:active{
+    color:rgba(0, 0, 0, 0.719);
+}
+
+h1{
+    font-size: 90px;
+}
+
+html,body{
+    font-size: 20px;
+}

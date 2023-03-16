@@ -1,0 +1,9 @@
+/* NAVIGATION */
+nav {
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 50px;
+    align-items: center;
+    font-size: 23px;
+}
