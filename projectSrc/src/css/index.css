@@ -1,44 +1,10 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-}
 
-a{
-    text-decoration:none;
-}
-
-a:link,
-a:visited{
-    color:black;
-}
-a:hover,
-a:active{
-    color:rgba(0, 0, 0, 0.719);
-}
-
-h1{
-    font-size: 90px;
-}
-
-html,body{
-    font-size: 20px;
-}
 /* ins{
     border-bottom: 1px solid rgba(0, 0, 0, 0.575);
 } */
 
 
 
-/* NAVIGATION */
-nav {
-    height: 80px;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 50px;
-    align-items: center;
-    font-size: 23px;
-}
 
 
 .welcome-text{
