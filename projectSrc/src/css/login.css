@@ -1,0 +1,31 @@
+.login-section{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+    min-height: 300px;
+}
+
+.login-section h2{
+    font-size: 40px;
+    color:rgba(0, 0, 0, 0.651);
+}
+
+input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 45px;
+    font-size: 20px;
+    padding: 0 20px;
+}
+
+input:first-of-type{
+    margin-top:30px;
+}
+
+input[type="submit"]{
+    border:none;
+    cursor:pointer;
+    /* padding:20px; */
+}
