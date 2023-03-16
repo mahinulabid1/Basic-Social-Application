@@ -1,4 +1,4 @@
-// main node file
+// main node module
 const fs= require("fs");
 const express= require('express');
 const app = express();
@@ -21,14 +21,14 @@ const HTMLPage= fs.readFileSync(`${__dirname}/projectSrc/index.html`, "utf-8");
 const page1= fs.readFileSync(`${__dirname}/projectSrc/page1.html`, "utf-8");
 const page2= fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8");
 
-
+           
 // replace middleware
 let replacedCode;
 const replaceCode=(element)=>{
     let replaceTemp;
     if(element === HTMLPage){
         replaceTemp = pageHeader.replace("%%HeaderTitle%%", "Connectify-Home");
-        replaceTemp= replaceTemp.replace("%%styles%%", indexPageStyle);
+        replaceTemp= replaceTemp.replace("/*%%styles%%*/", indexPageStyle);
     }
     else{
         console.log("no page title"); 

@@ -8,6 +8,63 @@ a{
     text-decoration:none;
 }
 
+a:link,
+a:visited{
+    color:black;
+}
+a:hover,
+a:active{
+    color:rgba(0, 0, 0, 0.719);
+}
+
 h1{
     font-size: 90px;
 }
+
+html,body{
+    font-size: 20px;
+}
+/* ins{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.575);
+} */
+
+
+
+/* NAVIGATION */
+nav {
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 50px;
+    align-items: center;
+    font-size: 23px;
+}
+
+
+.welcome-text{
+    position:absolute;
+    top: 50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    display:flex;
+    flex-direction: column;
+    text-align:center;
+}
+
+
+.welcome-login-btn{
+    padding: 20px;
+    background: #00000026;
+    display: inline-block;
+    margin: 20px 0;
+    transition:all 400ms;
+}
+.welcome-login-btn:hover{
+    background: #00000052;
+}
+
+.welcome-btn-create-account{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.432);
+    color:rgba(0, 0, 0, 0.432);
+}
+
