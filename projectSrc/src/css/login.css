@@ -29,3 +29,14 @@ input[type="submit"]{
     cursor:pointer;
     /* padding:20px; */
 }
+
+
+.create-account-btn{
+    color:rgba(0, 0, 0, 0.432);
+    text-decoration:underline;
+    transition: color 400ms;
+}
+
+.create-account-btn:hover{
+    color:rgba(0, 0, 0, 0.788);
+}

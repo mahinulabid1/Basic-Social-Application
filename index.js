@@ -69,25 +69,25 @@ const FileSystem = {
 // replace middleware
 let replacedCode;
 const replaceCode = (element) => {
-    let replaceTemp; 
-    switch(element){
+    let replaceTemp;
+    switch (element) {
 
         //note that it also takes the "element" and manipulate it and returns in an object from the function BindManager()
         case FileSystem.HTMLPage:
-            replaceTemp= ModuleBind.BindManager("Connectify-Home", [FileSystem.HomePageStyles, FileSystem.UniversalStyles, FileSystem.Navigation], element);
+            replaceTemp = ModuleBind.BindManager("Connectify-Home", [FileSystem.HomePageStyles, FileSystem.UniversalStyles, FileSystem.Navigation], element);
             break;
 
         case FileSystem.LoginPage:
-            replaceTemp =ModuleBind.BindManager("Connectify-Login", [FileSystem.LoginPageStyles, FileSystem.UniversalStyles, FileSystem.Navigation], element);
+            replaceTemp = ModuleBind.BindManager("Connectify-Login", [FileSystem.LoginPageStyles, FileSystem.UniversalStyles, FileSystem.Navigation], element);
             break;
-        
+
         case FileSystem.CreateAccount:
-            replaceTemp =ModuleBind.BindManager("Connectify-Create Account", [FileSystem.CreateAccountStyleSheet, FileSystem.UniversalStyles, FileSystem.Navigation], element);
+            replaceTemp = ModuleBind.BindManager("Connectify-Create Account", [FileSystem.CreateAccountStyleSheet, FileSystem.UniversalStyles, FileSystem.Navigation], element);
             break;
 
         default:
             console.log("no page title");
-    }    
+    }
 
 
 
@@ -123,24 +123,24 @@ app.get("/login", (req, res) => {
 })
 
 
-app.get("/Page1", (req, res) => {
-    let y = JSON.parse(userInfo)
-    console.log(y.mahinul9);
-    res.writeHead(200, {
-        "content-type": "text/html"
-    })
-    res.end(FileSystem.page1);
-});
+// app.get("/Page1", (req, res) => {
+//     let y = JSON.parse(userInfo)
+//     console.log(y.mahinul9);
+//     res.writeHead(200, {
+//         "content-type": "text/html"
+//     })
+//     res.end(FileSystem.page1);
+// });
 
 
-app.get("/Page2", (req, res) => {
-    let y = JSON.parse(userInfo)
-    console.log(y.mahinul9);
-    res.writeHead(200, {
-        "content-type": "text/html"
-    })
-    res.end(FileSystem.page2);
-});
+// app.get("/Page2", (req, res) => {
+//     let y = JSON.parse(userInfo)
+//     console.log(y.mahinul9);
+//     res.writeHead(200, {
+//         "content-type": "text/html"
+//     })
+//     res.end(FileSystem.page2);
+// });
 
 
 //login section
@@ -176,8 +176,36 @@ app.get("/newAccount", (req, res) => {
 });
 
 app.post("/newAccount", (req, res) => {
+    let Fullname = req.body.full_name;
+    let username = req.body.username;
+    let password = req.body.password;
+    let data = JSON.parse(userInfo);
+
+    //check if there is same username
+
+    // for (let i = 0; i < data.length; i++) {
+    //     if (data[i].userid === username) {
+    //         console.log("username match");
+    //         res.redirect("/newAccount");
+    //     } else {
+    //         console.log("username doesn't match");
+    //     }
+    // }
+    data.push({userid:username, password: password, fullname:Fullname});
+    data = JSON.stringify(data);
+    res.writeHead(200, {
+        "content-type": "application/json"
+    });
+    console.log(data);
+    fs.writeFileSync(`${__dirname}/database/userinfo.json`, data);        
+    res.end();
 
 })
+
+
+
+
+
 
 
 app.listen(8000, () => {

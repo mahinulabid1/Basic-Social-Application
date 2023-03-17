@@ -5,6 +5,8 @@ const fs= require('fs');
 const userNameCheck= fs.readFileSync(`${__dirname}/database/userinfo.json`);
 const pageHeader = fs.readFileSync(`${__dirname}/projectSrc/component/header.html`, "utf-8");
 const inspectTool=fs.readFileSync(`${__dirname}/projectSrc/component/inspecttools.html`, "utf-8");
+const navigation=fs.readFileSync(`${__dirname}/projectSrc/component/navigation.html`, "utf-8");
+
 
 exports.moduleFunction={
     BindComponent:(bindarr)=>{
@@ -76,6 +78,7 @@ exports.moduleFunction={
         
         //compulsary HTML Binding
         htmlBind = htmlElement.replace("<!-- %%inspection tools%% -->", inspectTool);
+        htmlBind= htmlBind.replace("<!-- %%navigation%% -->", navigation);
 
         let tempObj={
             tempMem: tempMem,
@@ -83,5 +86,13 @@ exports.moduleFunction={
         }
 
         return tempObj;
+    },
+
+
+
+
+    userNameCopyCheck: ()=>{
+        //this function checks if any new account trying to create duplicate username
+        
     }
 }
