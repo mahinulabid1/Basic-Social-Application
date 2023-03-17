@@ -1,5 +1,11 @@
 const fs= require('fs');
 
+
+
+const userNameCheck= fs.readFileSync(`${__dirname}/database/userinfo.json`);
+const pageHeader = fs.readFileSync(`${__dirname}/projectSrc/component/header.html`, "utf-8");
+const inspectTool=fs.readFileSync(`${__dirname}/projectSrc/component/inspecttools.html`, "utf-8");
+
 exports.moduleFunction={
     BindComponent:(bindarr)=>{
         // BIND COMPONENT TAKES TWO ARGUMENT
@@ -13,10 +19,15 @@ exports.moduleFunction={
         return tempmemory;
         // this returns a binded chunk of same group code like js, css, html
     },
+
+
+
+
+
     Authentication:(username,password)=>{
         let Switch;
         let passwordFromData;
-        let userNameCheck= fs.readFileSync(`${__dirname}/database/userinfo.json`);
+        
         userNameCheck= JSON.parse(userNameCheck);
 
         for(let i=0;i<userNameCheck.length;i++){
@@ -46,5 +57,31 @@ exports.moduleFunction={
         }
 
         
+    },
+
+
+
+    BindManager: (websiteTitle, moduleBindArr, htmlElement)=>{
+        let tempMem;
+        let htmlBind;
+
+        // websiteTitle = the text will be at <head> <title> the text </title> </head>
+        // moduleBindArr = all the binding element will be binded
+
+
+        //website title
+        tempMem=pageHeader.replace("%%HeaderTitle%%", websiteTitle);
+        let BINDED = this.moduleFunction.BindComponent(moduleBindArr);
+        tempMem= tempMem.replace("/*%%styles%%*/", BINDED);
+        
+        //compulsary HTML Binding
+        htmlBind = htmlElement.replace("<!-- %%inspection tools%% -->", inspectTool);
+
+        let tempObj={
+            tempMem: tempMem,
+            htmlBind: htmlBind
+        }
+
+        return tempObj;
     }
 }

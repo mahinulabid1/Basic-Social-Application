@@ -10,10 +10,11 @@
 
 
 // main node module
-const fs= require("fs");
-const express= require('express');
+const fs = require("fs");
+const express = require('express');
+const cookieParser = require("cookie-parser");
 const app = express();
-const cookieParser=require("cookie-parser");
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -24,28 +25,30 @@ app.use(express.urlencoded({ extended: true }));
 
 
 const functionsModule = require(`${__dirname}/functions.js`);
-const ModuleBind= functionsModule.moduleFunction;
+const ModuleBind = functionsModule.moduleFunction;
 
 
 // fetching database
-const userInfo= fs.readFileSync(`${__dirname}/database/userinfo.json`, "utf-8");
+const userInfo = fs.readFileSync(`${__dirname}/database/userinfo.json`, "utf-8");
 
 
 //fetching component
-const pageHeader= fs.readFileSync(`${__dirname}/projectSrc/component/header.html`, "utf-8");
+const pageHeader = fs.readFileSync(`${__dirname}/projectSrc/component/header.html`, "utf-8");
 
 
 // fetching stylesheet
-const indexPageStyle= fs.readFileSync(`${__dirname}/projectSrc/src/css/index.css`, "utf-8");
+const indexPageStyle = fs.readFileSync(`${__dirname}/projectSrc/src/css/index.css`, "utf-8");
 
 
 // fetching HTML page
-const FileSystem={
+const FileSystem = {
     //HTML FILE
-    HTMLPage:fs.readFileSync(`${__dirname}/projectSrc/index.html`, "utf-8"),
-    page1:fs.readFileSync(`${__dirname}/projectSrc/page1.html`, "utf-8"),
-    page2:fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8"),
+    HTMLPage: fs.readFileSync(`${__dirname}/projectSrc/index.html`, "utf-8"),
+    page1: fs.readFileSync(`${__dirname}/projectSrc/page1.html`, "utf-8"),
+    page2: fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8"),
     LoginPage: fs.readFileSync(`${__dirname}/projectSrc/login.html`, "utf-8"),
+    Newsfeed: fs.readFileSync(`${__dirname}/projectSrc/newsfeed.html`),
+    CreateAccount: fs.readFileSync(`${__dirname}/projectSrc/createAccount.html`, "utf-8"),
 
 
 
@@ -58,95 +61,125 @@ const FileSystem={
     //STYLESHEET
     LoginPageStyles: fs.readFileSync(`${__dirname}/projectSrc/src/css/login.css`, "utf-8"),
     HomePageStyles: fs.readFileSync(`${__dirname}/projectSrc/src/css/index.css`, "utf-8"),
+    CreateAccountStyleSheet: fs.readFileSync(`${__dirname}/projectSrc/src/css/createAccount.css`, "utf-8"),
 }
 
 
-            
+
 // replace middleware
 let replacedCode;
-const replaceCode=(element)=>{
-    let replaceTemp;
-    if(element === FileSystem.HTMLPage){
-        replaceTemp = pageHeader.replace("%%HeaderTitle%%", "Connectify-Home");
-        replaceTemp= replaceTemp.replace("<!-- **icon** -->", `<link rel="icon/image" href="${__dirname}/projectSrc/src/img/favicon.png">`)
-        //BIND styles
-        let BINDED = ModuleBind.BindComponent([FileSystem.HomePageStyles,FileSystem.UniversalStyles, FileSystem.Navigation]);
-        replaceTemp= replaceTemp.replace("/*%%styles%%*/", BINDED);
-    }
-    else if(element===FileSystem.LoginPage){
-        replaceTemp = pageHeader.replace("%%HeaderTitle%%", "Connectify-Login"); 
-        let BINDED = ModuleBind.BindComponent([FileSystem.LoginPageStyles,FileSystem.UniversalStyles, FileSystem.Navigation]);
-        replaceTemp= replaceTemp.replace("/*%%styles%%*/", BINDED);
-    }
-    else{
-        console.log("no page title"); 
-    }
+const replaceCode = (element) => {
+    let replaceTemp; 
+    switch(element){
 
-    replacedCode= element.replace("%%Head%%", replaceTemp);
+        //note that it also takes the "element" and manipulate it and returns in an object from the function BindManager()
+        case FileSystem.HTMLPage:
+            replaceTemp= ModuleBind.BindManager("Connectify-Home", [FileSystem.HomePageStyles, FileSystem.UniversalStyles, FileSystem.Navigation], element);
+            break;
+
+        case FileSystem.LoginPage:
+            replaceTemp =ModuleBind.BindManager("Connectify-Login", [FileSystem.LoginPageStyles, FileSystem.UniversalStyles, FileSystem.Navigation], element);
+            break;
+        
+        case FileSystem.CreateAccount:
+            replaceTemp =ModuleBind.BindManager("Connectify-Create Account", [FileSystem.CreateAccountStyleSheet, FileSystem.UniversalStyles, FileSystem.Navigation], element);
+            break;
+
+        default:
+            console.log("no page title");
+    }    
+
+
+
+
+
+    replacedCode = replaceTemp.htmlBind.replace("%%Head%%", replaceTemp.tempMem);
 }
 
 
- 
-app.get("/", (req,res)=>{ 
+
+app.get("/", (req, res) => {
     replaceCode(FileSystem.HTMLPage);
     res.writeHead(200, {
-        "content-type":"text/html" 
+        "content-type": "text/html"
     });
 
     res.end(replacedCode);
+    // res.render('index', function (err, html) {
+    //     res.send(html)
+    // })
+    // res.render("index");
+    // res.end();
 });
 
 
-app.get("/login", (req, res)=>{
+app.get("/login", (req, res) => {
     replaceCode(FileSystem.LoginPage);
     res.writeHead(200, {
-        "content-type":"text/html" 
+        "content-type": "text/html"
     });
 
     res.end(replacedCode);
 })
 
 
-app.get("/Page1", (req,res)=>{
+app.get("/Page1", (req, res) => {
     let y = JSON.parse(userInfo)
     console.log(y.mahinul9);
     res.writeHead(200, {
-        "content-type":"text/html"
+        "content-type": "text/html"
     })
     res.end(FileSystem.page1);
 });
 
 
-app.get("/Page2", (req,res)=>{
+app.get("/Page2", (req, res) => {
     let y = JSON.parse(userInfo)
     console.log(y.mahinul9);
     res.writeHead(200, {
-        "content-type":"text/html"
+        "content-type": "text/html"
     })
     res.end(FileSystem.page2);
 });
 
 
 //login section
-app.post("/login",(req,res)=>{
-    let username= req.body.username;
-    let password=req.body.password;
-    
+app.post("/login", (req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
+
     //now I have the password, what should I do?
     //it will route to specific 
-    let authResult =ModuleBind.Authentication(username, password);
-    if(authResult===true){
+    let authResult = ModuleBind.Authentication(username, password);
+    if (authResult === true) {
         console.log("continue to login");
-        res.cookie("username",username);
+        res.cookie("username", username);
         res.cookie('password', password);
-        res.redirect("/");
+        res.redirect("/newsfeed");
     }
-    // res.end(replaceCode(FileSystem.HTMLPage));
-     
 })
 
 
 
-app.listen(8000, ()=>{
+
+
+app.get("/newsfeed", (req, res) => {
+    res.end(FileSystem.Newsfeed);
+});
+
+app.get("/newAccount", (req, res) => {
+    replaceCode(FileSystem.CreateAccount);
+    res.writeHead(200, {
+        "content-type": "text/html"
+    });
+    res.end(replacedCode);
+});
+
+app.post("/newAccount", (req, res) => {
+
+})
+
+
+app.listen(8000, () => {
     console.log("listening to the port 8000");
 });

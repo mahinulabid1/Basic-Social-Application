@@ -1,0 +1,41 @@
+.create-account-form{
+    position:absolute;
+    min-height: 300px;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+}
+
+input{
+    display:block;
+    width: 100%;
+    height: 50px;
+    font-size: 17px;
+    padding: 0 10px;
+    background: rgb(235, 235, 235);
+    border:none;
+    margin-bottom: 10px;
+
+}
+
+input:focus{
+    outline:none;
+}
+
+input:first-of-type{
+    margin-top: 40px;
+}
+
+input[type="submit"]{
+    cursor:pointer;
+    background: black;
+    color:white;
+    transition: all 400ms;
+}
+
+input[type="submit"]:hover{
+    background:white;
+    color:black;
+    text-decoration:underline;
+}
