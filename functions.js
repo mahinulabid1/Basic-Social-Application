@@ -1,8 +1,13 @@
 const fs= require('fs');
+// var express = require('express');
+// var cookieParser = require('cookie-parser');
+
+// var app = express();
+// app.use(cookieParser());
 
 
 
-const userNameCheck= fs.readFileSync(`${__dirname}/database/userinfo.json`);
+const userNameCheck= fs.readFileSync(`${__dirname}/database/userinfo.json`, "utf-8");
 const pageHeader = fs.readFileSync(`${__dirname}/projectSrc/component/header.html`, "utf-8");
 const inspectTool=fs.readFileSync(`${__dirname}/projectSrc/component/inspecttools.html`, "utf-8");
 const navigation=fs.readFileSync(`${__dirname}/projectSrc/component/navigation.html`, "utf-8");
@@ -30,15 +35,18 @@ exports.moduleFunction={
         let Switch;
         let passwordFromData;
         
-        userNameCheck= JSON.parse(userNameCheck);
+        let data= JSON.parse(userNameCheck);
+        // console.log(data);
 
-        for(let i=0;i<userNameCheck.length;i++){
-            console.log(userNameCheck[i]);
+        for(let i=0;i<data.length;i++){
+            // console.log(data[i]);
 
-            if(userNameCheck[i].userid===username){
+            if(data[i].userid===username){
                 //this means username matched
-                passwordFromData=userNameCheck[i].password;
+
+                passwordFromData=data[i].password;
                 console.log("username matched");
+
                 //if username found in database then return true
                 Switch=true; 
                 break;
@@ -54,7 +62,8 @@ exports.moduleFunction={
                 console.log("password match");
                 return true;
             }else{
-                console.log("password didnt match")
+                console.log("password didnt match");
+                console.log(passwordFromData);
             }
         }
 
@@ -94,5 +103,8 @@ exports.moduleFunction={
     userNameCopyCheck: ()=>{
         //this function checks if any new account trying to create duplicate username
         
-    }
+    },
+
+    
+
 }

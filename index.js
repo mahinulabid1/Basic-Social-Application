@@ -66,6 +66,18 @@ const FileSystem = {
 
 
 
+
+// cookie checker 
+checkForCookies = (req) => {
+    let Cookies = req;
+    if ((Cookies.username) === undefined) {
+        return false;
+    } else {
+        return (Cookies.username);
+    }
+}
+
+
 // replace middleware
 let replacedCode;
 const replaceCode = (element) => {
@@ -99,27 +111,35 @@ const replaceCode = (element) => {
 
 
 app.get("/", (req, res) => {
-    replaceCode(FileSystem.HTMLPage);
-    res.writeHead(200, {
-        "content-type": "text/html"
-    });
+    let x = checkForCookies(req.cookies);
+    if (x === false) {
+        replaceCode(FileSystem.HTMLPage);
+        res.writeHead(200, {
+            "content-type": "text/html"
+        });
 
-    res.end(replacedCode);
-    // res.render('index', function (err, html) {
-    //     res.send(html)
-    // })
-    // res.render("index");
-    // res.end();
+        res.end(replacedCode);
+    } else if (x !== false) {
+        res.redirect("/newsfeed");
+    }
 });
 
 
 app.get("/login", (req, res) => {
-    replaceCode(FileSystem.LoginPage);
-    res.writeHead(200, {
-        "content-type": "text/html"
-    });
+    let x = checkForCookies(req.cookies);
+    if (x === false) {
+        replaceCode(FileSystem.LoginPage);
+        res.writeHead(200, {
+            "content-type": "text/html"
+        });
 
-    res.end(replacedCode);
+        res.end(replacedCode);
+    } else if (x !== false) {
+        res.redirect("/newsfeed");
+    }
+
+
+
 })
 
 
@@ -156,6 +176,8 @@ app.post("/login", (req, res) => {
         res.cookie("username", username);
         res.cookie('password', password);
         res.redirect("/newsfeed");
+    } else {
+        res.redirect("/login");
     }
 })
 
@@ -168,11 +190,20 @@ app.get("/newsfeed", (req, res) => {
 });
 
 app.get("/newAccount", (req, res) => {
-    replaceCode(FileSystem.CreateAccount);
-    res.writeHead(200, {
-        "content-type": "text/html"
-    });
-    res.end(replacedCode);
+    let x = checkForCookies(req.cookies);
+    if (x === false) {
+        replaceCode(FileSystem.CreateAccount);
+        res.writeHead(200, {
+            "content-type": "text/html"
+        });
+        res.end(replacedCode);
+
+    } 
+    else if (x !== false) {
+        res.redirect("/newsfeed");
+    }
+
+
 });
 
 app.post("/newAccount", (req, res) => {
@@ -180,25 +211,17 @@ app.post("/newAccount", (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
     let data = JSON.parse(userInfo);
-
-    //check if there is same username
-
-    // for (let i = 0; i < data.length; i++) {
-    //     if (data[i].userid === username) {
-    //         console.log("username match");
-    //         res.redirect("/newAccount");
-    //     } else {
-    //         console.log("username doesn't match");
-    //     }
-    // }
-    data.push({userid:username, password: password, fullname:Fullname});
+    
+    data.push({ userid: username, password: password, fullname: Fullname });
     data = JSON.stringify(data);
     res.writeHead(200, {
         "content-type": "application/json"
     });
     console.log(data);
-    fs.writeFileSync(`${__dirname}/database/userinfo.json`, data);        
-    res.end();
+    fs.writeFileSync(`${__dirname}/database/userinfo.json`, data);
+    res.cookie("username", username);
+    res.cookie('password', password);
+    res.redirect("/newsfeed");
 
 })
 
