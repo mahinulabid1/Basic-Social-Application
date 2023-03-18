@@ -184,7 +184,6 @@ router.get("/newsfeed", (req, res) => {
     let data=JSON.parse(userInfo);
     for(let i =0; i< data.length; i++){
         if(data[i].userid=== cookiesFetch.username){
-            console.log("user found");
             fullname= data[i].fullname;
         }
     }
@@ -229,6 +228,13 @@ router.get("/newAccount", (req, res) => {
     res.cookie('password', password);
     res.redirect("/newsfeed");
 
+});
+
+
+router.get("/logout", (req,res)=>{
+    res.clearCookie("username");
+    res.clearCookie("password");
+    res.redirect("/");
 })
 
 
