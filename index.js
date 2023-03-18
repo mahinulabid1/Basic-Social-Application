@@ -14,6 +14,8 @@ const fs = require("fs");
 const express = require('express');
 const cookieParser = require("cookie-parser");
 const app = express();
+const router = express.Router();
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -40,14 +42,14 @@ const pageHeader = fs.readFileSync(`${__dirname}/projectSrc/component/header.htm
 const indexPageStyle = fs.readFileSync(`${__dirname}/projectSrc/src/css/index.css`, "utf-8");
 
 
-// fetching HTML page
-const FileSystem = {
+// fetching HTML page 
+const FileSystem = {   
     //HTML FILE
     HTMLPage: fs.readFileSync(`${__dirname}/projectSrc/index.html`, "utf-8"),
     page1: fs.readFileSync(`${__dirname}/projectSrc/page1.html`, "utf-8"),
-    page2: fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8"),
+    page2: fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8"), 
     LoginPage: fs.readFileSync(`${__dirname}/projectSrc/login.html`, "utf-8"),
-    Newsfeed: fs.readFileSync(`${__dirname}/projectSrc/newsfeed.html`),
+    Newsfeed: fs.readFileSync(`${__dirname}/projectSrc/newsfeed.html`, "utf-8"),
     CreateAccount: fs.readFileSync(`${__dirname}/projectSrc/createAccount.html`, "utf-8"),
 
 
@@ -62,6 +64,7 @@ const FileSystem = {
     LoginPageStyles: fs.readFileSync(`${__dirname}/projectSrc/src/css/login.css`, "utf-8"),
     HomePageStyles: fs.readFileSync(`${__dirname}/projectSrc/src/css/index.css`, "utf-8"),
     CreateAccountStyleSheet: fs.readFileSync(`${__dirname}/projectSrc/src/css/createAccount.css`, "utf-8"),
+    NewsfeedStyle:  fs.readFileSync(`${__dirname}/projectSrc/src/css/newsfeed.css`, "utf-8"),
 }
 
 
@@ -96,13 +99,16 @@ const replaceCode = (element) => {
         case FileSystem.CreateAccount:
             replaceTemp = ModuleBind.BindManager("Connectify-Create Account", [FileSystem.CreateAccountStyleSheet, FileSystem.UniversalStyles, FileSystem.Navigation], element);
             break;
+        
+        case FileSystem.Newsfeed:
+            replaceTemp = ModuleBind.BindManager("Connectify-NewsFeed", [FileSystem.NewsfeedStyle, FileSystem.UniversalStyles, FileSystem.Navigation], element);
+            break;
 
         default:
             console.log("no page title");
     }
 
-
-
+ 
 
 
     replacedCode = replaceTemp.htmlBind.replace("%%Head%%", replaceTemp.tempMem);
@@ -110,7 +116,7 @@ const replaceCode = (element) => {
 
 
 
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
     let x = checkForCookies(req.cookies);
     if (x === false) {
         replaceCode(FileSystem.HTMLPage);
@@ -125,7 +131,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/login", (req, res) => {
+router.get("/login", (req, res) => {
     let x = checkForCookies(req.cookies);
     if (x === false) {
         replaceCode(FileSystem.LoginPage);
@@ -137,9 +143,21 @@ app.get("/login", (req, res) => {
     } else if (x !== false) {
         res.redirect("/newsfeed");
     }
+}).post("/login", (req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
 
-
-
+    //now I have the password, what should I do?
+    //it will route to specific 
+    let authResult = ModuleBind.Authentication(username, password);
+    if (authResult === true) {
+        console.log("continue to login");
+        res.cookie("username", username);
+        res.cookie('password', password);
+        res.redirect("/newsfeed");
+    } else {
+        res.redirect("/login");
+    }
 })
 
 
@@ -164,32 +182,42 @@ app.get("/login", (req, res) => {
 
 
 //login section
-app.post("/login", (req, res) => {
-    let username = req.body.username;
-    let password = req.body.password;
+// app.post("/login", (req, res) => {
+//     let username = req.body.username;
+//     let password = req.body.password;
 
-    //now I have the password, what should I do?
-    //it will route to specific 
-    let authResult = ModuleBind.Authentication(username, password);
-    if (authResult === true) {
-        console.log("continue to login");
-        res.cookie("username", username);
-        res.cookie('password', password);
-        res.redirect("/newsfeed");
-    } else {
-        res.redirect("/login");
-    }
-})
-
-
+//     //now I have the password, what should I do?
+//     //it will route to specific 
+//     let authResult = ModuleBind.Authentication(username, password);
+//     if (authResult === true) {
+//         console.log("continue to login");
+//         res.cookie("username", username);
+//         res.cookie('password', password);
+//         res.redirect("/newsfeed");
+//     } else {
+//         res.redirect("/login");
+//     }
+// })
 
 
 
-app.get("/newsfeed", (req, res) => {
-    res.end(FileSystem.Newsfeed);
+
+
+router.get("/newsfeed", (req, res) => {
+    replaceCode(FileSystem.Newsfeed);
+    res.writeHead(200, {
+        "content-type": "text/html"
+    });
+
+    res.end(replacedCode);
 });
 
-app.get("/newAccount", (req, res) => {
+
+
+
+
+
+router.get("/newAccount", (req, res) => {
     let x = checkForCookies(req.cookies);
     if (x === false) {
         replaceCode(FileSystem.CreateAccount);
@@ -198,20 +226,18 @@ app.get("/newAccount", (req, res) => {
         });
         res.end(replacedCode);
 
-    } 
+    }
     else if (x !== false) {
         res.redirect("/newsfeed");
     }
 
 
-});
-
-app.post("/newAccount", (req, res) => {
+}).post("/newAccount", (req, res) => {
     let Fullname = req.body.full_name;
     let username = req.body.username;
     let password = req.body.password;
     let data = JSON.parse(userInfo);
-    
+
     data.push({ userid: username, password: password, fullname: Fullname });
     data = JSON.stringify(data);
     res.writeHead(200, {
@@ -225,12 +251,33 @@ app.post("/newAccount", (req, res) => {
 
 })
 
+// app.post("/newAccount", (req, res) => {
+//     let Fullname = req.body.full_name;
+//     let username = req.body.username;
+//     let password = req.body.password;
+//     let data = JSON.parse(userInfo);
+
+//     data.push({ userid: username, password: password, fullname: Fullname });
+//     data = JSON.stringify(data);
+//     res.writeHead(200, {
+//         "content-type": "application/json"
+//     });
+//     console.log(data);
+//     fs.writeFileSync(`${__dirname}/database/userinfo.json`, data);
+//     res.cookie("username", username);
+//     res.cookie('password', password);
+//     res.redirect("/newsfeed");
+
+// })
 
 
 
 
 
+// this app.use(router); must be at the bottom of all routing
+app.use(router);
 
+//module for creating port, it needs to be at the bottom of the page
 app.listen(8000, () => {
     console.log("listening to the port 8000");
 });
