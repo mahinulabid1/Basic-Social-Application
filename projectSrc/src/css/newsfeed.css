@@ -19,3 +19,35 @@
     overflow-y: auto;
 }
 
+.user-fullname{
+    font-size: 30px;
+    margin-bottom: 14px;
+    color:burlywood;
+}
+
+.username{
+    font-size: 19px;
+    color:rgb(184, 154, 117);
+    text-decoration: underline;
+}   
+
+.logout-btn{
+    padding: 10px 20px;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.151);
+    display:inline-block;
+    margin-top: 30px;
+    transition:background 400ms;
+}
+
+.logout-btn:link,
+.logout-btn:visited
+{
+    background: green;
+    color:white;
+}
+
+.logout-btn:hover,
+.logout-btn:active
+{
+    background: rgba(0, 128, 0, 0.548);
+}

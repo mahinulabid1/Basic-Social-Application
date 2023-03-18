@@ -109,7 +109,7 @@ const replaceCode = (element) => {
     }
 
  
-
+ 
 
     replacedCode = replaceTemp.htmlBind.replace("%%Head%%", replaceTemp.tempMem);
 }
@@ -161,54 +161,34 @@ router.get("/login", (req, res) => {
 })
 
 
-// app.get("/Page1", (req, res) => {
-//     let y = JSON.parse(userInfo)
-//     console.log(y.mahinul9);
-//     res.writeHead(200, {
-//         "content-type": "text/html"
-//     })
-//     res.end(FileSystem.page1);
-// });
-
-
-// app.get("/Page2", (req, res) => {
-//     let y = JSON.parse(userInfo)
-//     console.log(y.mahinul9);
-//     res.writeHead(200, {
-//         "content-type": "text/html"
-//     })
-//     res.end(FileSystem.page2);
-// });
-
-
-//login section
-// app.post("/login", (req, res) => {
-//     let username = req.body.username;
-//     let password = req.body.password;
-
-//     //now I have the password, what should I do?
-//     //it will route to specific 
-//     let authResult = ModuleBind.Authentication(username, password);
-//     if (authResult === true) {
-//         console.log("continue to login");
-//         res.cookie("username", username);
-//         res.cookie('password', password);
-//         res.redirect("/newsfeed");
-//     } else {
-//         res.redirect("/login");
-//     }
-// })
 
 
 
 
+// NEWSFEED ROUTING  
+router.get("/newsfeed", (req, res) => {    
+    let cookiesFetch= req.cookies;
+    let username= cookiesFetch.username;
+    let fullname;
 
-router.get("/newsfeed", (req, res) => {
     replaceCode(FileSystem.Newsfeed);
     res.writeHead(200, {
         "content-type": "text/html"
     });
 
+ 
+    //replacing some information
+    let newLogOutBtn= `<a href="http://127.0.0.1:8000/logout">Log Out</a>`
+    replacedCode= replacedCode.replace(`<a href="http://127.0.0.1:8000/login">Log In</a>`, newLogOutBtn);
+    replacedCode= replacedCode.replace("%%username%%" , `@${username}`);
+    let data=JSON.parse(userInfo);
+    for(let i =0; i< data.length; i++){
+        if(data[i].userid=== cookiesFetch.username){
+            console.log("user found");
+            fullname= data[i].fullname;
+        }
+    }
+    replacedCode= replacedCode.replace("%%fullname%%" , fullname);
     res.end(replacedCode);
 });
 
@@ -250,27 +230,6 @@ router.get("/newAccount", (req, res) => {
     res.redirect("/newsfeed");
 
 })
-
-// app.post("/newAccount", (req, res) => {
-//     let Fullname = req.body.full_name;
-//     let username = req.body.username;
-//     let password = req.body.password;
-//     let data = JSON.parse(userInfo);
-
-//     data.push({ userid: username, password: password, fullname: Fullname });
-//     data = JSON.stringify(data);
-//     res.writeHead(200, {
-//         "content-type": "application/json"
-//     });
-//     console.log(data);
-//     fs.writeFileSync(`${__dirname}/database/userinfo.json`, data);
-//     res.cookie("username", username);
-//     res.cookie('password', password);
-//     res.redirect("/newsfeed");
-
-// })
-
-
 
 
 
