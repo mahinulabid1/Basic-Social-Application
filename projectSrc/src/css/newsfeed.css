@@ -51,3 +51,86 @@
 {
     background: rgba(0, 128, 0, 0.548);
 }
+
+
+
+/* ============================== */
+.newsfeed-head{
+    color:rgb(184, 154, 117);
+}
+
+.postCreate{
+    display: block;
+    width: 100%;
+    border: none;
+    height: 165px;
+    border-radius: 20px;
+    margin-bottom: 22px;
+    padding: 20px 30px;
+}
+
+.postCreate:focus{
+    outline:none;
+}
+
+.create_post_submit_btn{
+    border: none;
+    line-height: 50px;
+    width: 140px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor:pointer;
+    transition:background 500ms;
+    background:#2980b9 ;
+    color:white; 
+}
+
+.create_post_submit_btn:hover,
+.create_post_submit_btn:active{
+    background:#3498db;
+    color:white;
+}
+
+
+
+/*
+================
+status section 
+=================
+*/
+.status-section{
+    margin-top: 40px;
+    background: aliceblue;
+    padding: 20px 33px;
+    border-radius: 20px;
+}
+
+.status-username{
+    font-size: 20px;
+    color:rgb(114, 114, 114);
+}
+.date-of-status{
+    font-size: 16px;
+    font-style: italic;
+    margin: 10px 0;
+}
+
+.like-to-post{
+    border: none;
+    background: black;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 20px;
+    transition: all 400ms;
+    cursor:pointer;
+}
+
+
+.like-to-post:hover{
+    color: black;
+    background: white;
+}
+
+.thestatus{
+    margin-bottom: 40px;
+}

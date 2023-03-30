@@ -17,7 +17,33 @@
             <p class="username"><i>%%username%%</i></p>
             <a class="logout-btn" href="http://127.0.0.1:8000/logout">Log Out</a>
         </div>
-        <div class="main-flex">newsfeed section</div>
+        <div class="main-flex">
+            <h1 class="newsfeed-head">Newsfeed</h1>
+            
+            <div class="post-container">
+                <form action="http://127.0.0.1:8000/newsfeed" method="POST">
+                    <textarea name="createpost" placeholder="What's on your mind" class="postCreate"></textarea>
+                    <input type="submit" value="submit" class="create_post_submit_btn">
+                </form>
+
+
+            </div>
+
+
+
+            <!-- status section -->
+            <div class="status-section">
+                <!-- %%thestatus%% -->
+                <!-- <div class="thestatus">
+                    <h6 class="status-username">Username</h6>
+                    <p class="date-of-status">16-03-2023</p>
+                    <p class="status-data">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse saepe illum beatae ipsam voluptatem possimus cum ipsum eius, amet corrupti. Itaque exercitationem labore debitis veniam impedit alias quis? Explicabo, officiis.</p>
+    
+                    <button class="like-to-post">Like</button>
+                </div> -->
+                
+            </div>
+        </div>
         
     </section>
     
