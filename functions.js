@@ -86,8 +86,9 @@ exports.moduleFunction={
         tempMem= tempMem.replace("/*%%styles%%*/", BINDED);
         
         //compulsary HTML Binding
-        htmlBind = htmlElement.replace("<!-- %%inspection tools%% -->", inspectTool);
-        htmlBind= htmlBind.replace("<!-- %%navigation%% -->", navigation);
+        // htmlBind = htmlElement.replace("<!-- %%inspection tools%% -->", inspectTool);
+        // htmlBind= htmlBind.replace("<!-- %%navigation%% -->", navigation);
+        htmlBind= htmlElement.replace("<!-- %%navigation%% -->", navigation);
 
         let tempObj={
             tempMem: tempMem,
