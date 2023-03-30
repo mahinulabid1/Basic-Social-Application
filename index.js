@@ -32,6 +32,7 @@ const ModuleBind = functionsModule.moduleFunction;
 
 // fetching database
 const userInfo = fs.readFileSync(`${__dirname}/database/userinfo.json`, "utf-8");
+const postData = fs.readFileSync(`${__dirname}/database/postdata.json`, "utf-8");
 
 
 //fetching component
@@ -43,11 +44,11 @@ const indexPageStyle = fs.readFileSync(`${__dirname}/projectSrc/src/css/index.cs
 
 
 // fetching HTML page 
-const FileSystem = {   
+const FileSystem = {
     //HTML FILE
     HTMLPage: fs.readFileSync(`${__dirname}/projectSrc/index.html`, "utf-8"),
     page1: fs.readFileSync(`${__dirname}/projectSrc/page1.html`, "utf-8"),
-    page2: fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8"), 
+    page2: fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8"),
     LoginPage: fs.readFileSync(`${__dirname}/projectSrc/login.html`, "utf-8"),
     Newsfeed: fs.readFileSync(`${__dirname}/projectSrc/newsfeed.html`, "utf-8"),
     CreateAccount: fs.readFileSync(`${__dirname}/projectSrc/createAccount.html`, "utf-8"),
@@ -64,7 +65,7 @@ const FileSystem = {
     LoginPageStyles: fs.readFileSync(`${__dirname}/projectSrc/src/css/login.css`, "utf-8"),
     HomePageStyles: fs.readFileSync(`${__dirname}/projectSrc/src/css/index.css`, "utf-8"),
     CreateAccountStyleSheet: fs.readFileSync(`${__dirname}/projectSrc/src/css/createAccount.css`, "utf-8"),
-    NewsfeedStyle:  fs.readFileSync(`${__dirname}/projectSrc/src/css/newsfeed.css`, "utf-8"),
+    NewsfeedStyle: fs.readFileSync(`${__dirname}/projectSrc/src/css/newsfeed.css`, "utf-8"),
 }
 
 
@@ -99,7 +100,7 @@ const replaceCode = (element) => {
         case FileSystem.CreateAccount:
             replaceTemp = ModuleBind.BindManager("Connectify-Create Account", [FileSystem.CreateAccountStyleSheet, FileSystem.UniversalStyles, FileSystem.Navigation], element);
             break;
-        
+
         case FileSystem.Newsfeed:
             replaceTemp = ModuleBind.BindManager("Connectify-NewsFeed", [FileSystem.NewsfeedStyle, FileSystem.UniversalStyles, FileSystem.Navigation], element);
             break;
@@ -108,8 +109,8 @@ const replaceCode = (element) => {
             console.log("no page title");
     }
 
- 
- 
+
+
 
     replacedCode = replaceTemp.htmlBind.replace("%%Head%%", replaceTemp.tempMem);
 }
@@ -166,9 +167,9 @@ router.get("/login", (req, res) => {
 
 
 // NEWSFEED ROUTING  
-router.get("/newsfeed", (req, res) => {    
-    let cookiesFetch= req.cookies;
-    let username= cookiesFetch.username;
+router.get("/newsfeed", (req, res) => {
+    let cookiesFetch = req.cookies;
+    let username = cookiesFetch.username;
     let fullname;
 
     replaceCode(FileSystem.Newsfeed);
@@ -176,19 +177,77 @@ router.get("/newsfeed", (req, res) => {
         "content-type": "text/html"
     });
 
- 
-    //replacing some information
-    let newLogOutBtn= `<a href="http://127.0.0.1:8000/logout">Log Out</a>`
-    replacedCode= replacedCode.replace(`<a href="http://127.0.0.1:8000/login">Log In</a>`, newLogOutBtn);
-    replacedCode= replacedCode.replace("%%username%%" , `@${username}`);
-    let data=JSON.parse(userInfo);
-    for(let i =0; i< data.length; i++){
-        if(data[i].userid=== cookiesFetch.username){
-            fullname= data[i].fullname;
+
+    //replacing user information
+    let newLogOutBtn = `<a href="http://127.0.0.1:8000/logout">Log Out</a>`
+    replacedCode = replacedCode.replace(`<a href="http://127.0.0.1:8000/login">Log In</a>`, newLogOutBtn);
+    replacedCode = replacedCode.replace("%%username%%", `@${username}`);
+    let data = JSON.parse(userInfo);
+    for (let i = 0; i < data.length; i++) {
+        // after reading the username cookies search in database about this user and fetch its FULL NAME
+        if (data[i].userid === cookiesFetch.username) {
+            fullname = data[i].fullname;
         }
     }
-    replacedCode= replacedCode.replace("%%fullname%%" , fullname);
+    // Replacing the full name
+    replacedCode = replacedCode.replace("%%fullname%%", fullname);
+
+    // replace status section where many content will contain
+    let Element = "";
+    let PostData = JSON.parse(postData);
+    for (let i = 0; i < PostData.length; i++) {
+        let username = PostData[i].username;
+        let postContent = PostData[i].postContent;
+        let postDate = PostData[i].date;
+
+        let ConcatEl = `
+        <div class="thestatus">
+            <h6 class="status-username">@${username}</h6>
+            <p class="date-of-status">$${postDate}</p>
+            <p class="status-data">${postContent}</p>
+
+            <!--<button class="like-to-post">Like</button> -->
+        </div>
+        `;
+        Element= Element.concat(ConcatEl);
+    }
+    replacedCode= replacedCode.replace("<!-- %%thestatus%% -->", Element); 
+
+
     res.end(replacedCode);
+}).post("/newsfeed", (req, res) => {
+    let status = req.body.createpost;
+    let getUsername = req.cookies.username;
+
+    // date function
+    let date = new Date();
+    let fullDate = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+    let fullTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    // let Month = date.getMonth();
+    // let Day = date.getDate();
+    // let Year = date.getFullYear();
+
+    // // time (for status precedence in newsfeed);
+    // let Hour = date.getHours();
+    // let Seconds = date.getSeconds();
+    // let Minutes = date.getMinutes();
+
+    let data = {
+        username: getUsername,
+        postContent: status,
+        date: fullDate,
+        time: fullTime
+
+    }
+
+    let PostData = JSON.parse(postData);
+    PostData.push(data);
+    PostData= JSON.stringify(PostData);
+    console.log(PostData);
+
+    fs.writeFileSync(`${__dirname}/database/postdata.json`, PostData);
+
+    res.redirect("/newsfeed");
 });
 
 
@@ -225,13 +284,13 @@ router.get("/newAccount", (req, res) => {
     console.log(data);
     fs.writeFileSync(`${__dirname}/database/userinfo.json`, data);
     res.cookie("username", username);
-    res.cookie('password', password);
+    res.cookie('password', password);   //middleware
     res.redirect("/newsfeed");
 
 });
 
 
-router.get("/logout", (req,res)=>{
+router.get("/logout", (req, res) => {
     res.clearCookie("username");
     res.clearCookie("password");
     res.redirect("/");
