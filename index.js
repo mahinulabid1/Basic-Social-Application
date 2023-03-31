@@ -253,7 +253,7 @@ router.get("/newsfeed", (req, res) => {
 });
 
 
-router.get("/userCheckInLogin",(req,res)=>{  
+router.get("/userCheckInNewAccount",(req,res)=>{  
     let y= "";  
     let userDataBase = JSON.parse(userInfo);
     for(let i=0; i < userDataBase.length; i++){
@@ -268,6 +268,32 @@ router.get("/userCheckInLogin",(req,res)=>{
 }); 
 
 
+router.get("/loginUserCheck", (req,res)=>{
+    let response= "";
+    let pass = req.query.password;
+    let userid = req.query.username;
+    console.log(`Here is the pass:${pass}  Here is the username${userid} `);
+
+    let UserDatabase = JSON.parse(userInfo);
+    for(let i =0 ; i < UserDatabase.length; i++){
+        if(UserDatabase[i].userid === userid){ //username matched
+            if(UserDatabase[i].password=== pass){ // if username match check password
+                // if password match set response to this and break the loop
+                response= "username & password matched";
+                break;
+            }
+            else{
+                response = "username & password doesn't match";
+                break;
+            }
+        }else{
+            response = "username & password doesn't match";  
+        }
+    }
+
+    res.send(response);
+});
+ 
 
 router.get("/newAccount", (req, res) => {
     let x = checkForCookies(req.cookies);
