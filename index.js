@@ -254,9 +254,7 @@ router.get("/newsfeed", (req, res) => {
 
 
 router.get("/userCheckInLogin",(req,res)=>{  
-    console.log("got check req");
-    let y= ""; 
-    console.log(req.query.username);  
+    let y= "";  
     let userDataBase = JSON.parse(userInfo);
     for(let i=0; i < userDataBase.length; i++){
         if(userDataBase[i].userid== req.query.username){
@@ -266,7 +264,6 @@ router.get("/userCheckInLogin",(req,res)=>{
             y= "username not found";  
         }
     }
-       
     res.send(y);             
 }); 
 
