@@ -205,13 +205,13 @@ router.get("/newsfeed", (req, res) => {
             <h6 class="status-username">@${username}</h6>
             <p class="date-of-status">$${postDate}</p>
             <p class="status-data">${postContent}</p>
-
+            <hr>
             <!--<button class="like-to-post">Like</button> -->
         </div>
         `;
-        Element= Element.concat(ConcatEl);
+        Element = Element.concat(ConcatEl);
     }
-    replacedCode= replacedCode.replace("<!-- %%thestatus%% -->", Element); 
+    replacedCode = replacedCode.replace("<!-- %%thestatus%% -->", Element);
 
 
     res.end(replacedCode);
@@ -242,16 +242,33 @@ router.get("/newsfeed", (req, res) => {
 
     let PostData = JSON.parse(postData);
     PostData.push(data);
-    PostData= JSON.stringify(PostData);
+    PostData = JSON.stringify(PostData);
     console.log(PostData);
 
     fs.writeFileSync(`${__dirname}/database/postdata.json`, PostData);
 
     res.redirect("/newsfeed");
+
+
 });
 
 
-
+router.get("/userCheckInLogin",(req,res)=>{  
+    console.log("got check req");
+    let y= ""; 
+    console.log(req.query.username);  
+    let userDataBase = JSON.parse(userInfo);
+    for(let i=0; i < userDataBase.length; i++){
+        if(userDataBase[i].userid== req.query.username){
+            y = "username found";
+            break;
+        }else{
+            y= "username not found";  
+        }
+    }
+       
+    res.send(y);             
+}); 
 
 
 

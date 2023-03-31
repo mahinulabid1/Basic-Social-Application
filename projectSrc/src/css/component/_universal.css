@@ -24,3 +24,7 @@ h1{
 html,body{
     font-size: 20px;
 }
+
+.d-none{
+    display: none;
+}

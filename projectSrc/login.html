@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     %%Head%%
 
-    
+
 </head>
+
 <body>
     <!-- %%navigation%% -->
 
 
     <!-- %%inspection tools%% -->
 
-    
+
     <section class="login-section">
         <h2>Welcome to login Section</h2>
         <form action="http://127.0.0.1:8000/login/" method="POST">
-            <input type="text" name="username">
-            <input type="password" name="password">
+            <input class="input-user" type="text" name="username" required>
+            <input class="input-password" type="password" name="password" required>
             <input type="submit" value="submit">
         </form>
-        <p>Not a member? <a class="create-account-btn" href="http://127.0.0.1:8000/newAccount">Create New account</a></p>
+        <p>Not a member? <a class="create-account-btn" href="http://127.0.0.1:8000/newAccount">Create New account</a>
+        </p>
     </section>
+
+    
 </body>
 </html>

@@ -20,7 +20,8 @@
         <h2>Create a new Account</h2>
         <form action="http://127.0.0.1:8000/newAccount/" method="POST">
             <input type="text" name="full_name" placeholder="Full name" required>
-            <input type="text" name="username" placeholder="Enter a unique username" class="username" required>
+            <input type="text" name="username" placeholder="Enter a unique username" class="input-user" required>
+            <p class="username-warning d-none">Username already exist</p>
             <input type="password" name="password" placeholder="Enter your password" required>
             <input type="submit" value="Create A new Account ">
             <!-- %%username match alert%% -->
@@ -29,15 +30,37 @@
 
 
     <script>
-        const username= document.querySelector(".username");
+        let userCheckSwitch="";
+        const userInput = document.querySelector(".input-user");
+        const userWarning= document.querySelector(".username-warning");
+        const form= document.querySelector("form");
+        const http = new XMLHttpRequest();
+        userInput.addEventListener("change", () => {
+            // specifying the request type
+            http.open("GET", `http://127.0.0.1:8000/userCheckInLogin?username=${userInput.value}`, true);
 
-        username.onchange=()=>{
-            let value= username.value;
-            if(value.includes(" ")){
-                username.value="";
-                username.placeholder="NO SPACE!!!!";
+            // I sent the GET request
+            http.send();
+        });
+
+        http.onload = () => {
+            //when the request are finished sending and got the response text
+            console.log("done http response");
+            console.log(http.responseText);
+            userCheckSwitch= http.responseText;
+            if(http.responseText=="username found"){
+                userCheckSwitch = false; // if false do submit
             }
         }
+
+        form.addEventListener("submit", (e)=>{
+            if(userCheckSwitch == false){
+                e.preventDefault();
+                userWarning.classList.remove("d-none");
+            }
+        })
+
+
     </script>
 </body>
 

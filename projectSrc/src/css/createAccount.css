@@ -39,3 +39,8 @@ input[type="submit"]:hover{
     color:black;
     text-decoration:underline;
 }
+
+.username-warning{
+    color:red;
+    font-siZe: 14px;
+}

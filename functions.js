@@ -103,7 +103,7 @@ exports.moduleFunction={
 
     userNameCopyCheck: ()=>{
         //this function checks if any new account trying to create duplicate username
-        
+         
     },
 
     
