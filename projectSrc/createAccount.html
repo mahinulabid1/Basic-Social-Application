@@ -37,7 +37,7 @@
         const http = new XMLHttpRequest();
         userInput.addEventListener("keyup", () => {
             // specifying the request type
-            http.open("GET", `http://127.0.0.1:8000/userCheckInLogin?username=${userInput.value}`, true);
+            http.open("GET", `http://127.0.0.1:8000/userCheckInNewAccount?username=${userInput.value}`, true);
 
             // I sent the GET request
             http.send();
