@@ -49,8 +49,8 @@ const indexPageStyle = fs.readFileSync(`${__dirname}/projectSrc/src/css/index.cs
 const FileSystem = {
     //HTML FILE
     HTMLPage: fs.readFileSync(`${__dirname}/projectSrc/index.html`, "utf-8"),
-    page1: fs.readFileSync(`${__dirname}/projectSrc/page1.html`, "utf-8"),
-    page2: fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8"),
+    // page1: fs.readFileSync(`${__dirname}/projectSrc/page1.html`, "utf-8"),
+    // page2: fs.readFileSync(`${__dirname}/projectSrc/page2.html`, "utf-8"),
     LoginPage: fs.readFileSync(`${__dirname}/projectSrc/login.html`, "utf-8"),
     Newsfeed: fs.readFileSync(`${__dirname}/projectSrc/newsfeed.html`, "utf-8"),
     CreateAccount: fs.readFileSync(`${__dirname}/projectSrc/createAccount.html`, "utf-8"),
