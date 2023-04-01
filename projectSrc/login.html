@@ -35,7 +35,7 @@
 
 
         inputPassword.addEventListener("keyup",()=>{
-            http.open("GET", `/loginUserCheck?username=${inputUser.value}&password=${inputPassword.value}`, false);
+            http.open("GET", `/loginUserCheck?username=${inputUser.value}&password=${inputPassword.value}`, true);
             http.send();
         })
 

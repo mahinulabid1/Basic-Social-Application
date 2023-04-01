@@ -4,6 +4,11 @@
         "postContent": "some dummy post",
         "date": "21-02-2023",
         "time": "12:05:54"
-    } 
-    
+    },
+    {
+        "username": "mahinul8080",
+        "postContent": "some post",
+        "date": "2-3-2023",
+        "time": "3:38:53"
+    }
 ]
