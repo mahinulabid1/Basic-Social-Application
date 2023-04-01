@@ -15,6 +15,8 @@ const express = require('express');
 const cookieParser = require("cookie-parser");
 const app = express();
 const router = express.Router();
+const PORT =process.env.PORT || 8000;
+// The process. env global variable is injected by the Node at runtime for your application to use and it represents the state of the system environment your application is in when it starts. For example, if the system has a PATH variable set, this will be made accessible to you through process. env
 
 
 app.use(express.json());
@@ -342,6 +344,6 @@ router.get("/logout", (req, res) => {
 app.use(router);
 
 //module for creating port, it needs to be at the bottom of the page
-app.listen(8000, () => {
+app.listen(PORT, () => {
     console.log("listening to the port 8000");
 });
