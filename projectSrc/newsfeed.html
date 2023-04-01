@@ -15,13 +15,13 @@
         <div class="main-flex">
             <h4 class="user-fullname">%%fullname%%</h4>
             <p class="username"><i>%%username%%</i></p>
-            <a class="logout-btn" href="http://127.0.0.1:8000/logout">Log Out</a>
+            <a class="logout-btn" href="/logout">Log Out</a>
         </div>
         <div class="main-flex">
             <h1 class="newsfeed-head">Newsfeed</h1>
             
             <div class="post-container">
-                <form action="http://127.0.0.1:8000/newsfeed" method="POST">
+                <form action="/newsfeed" method="POST">
                     <textarea name="createpost" placeholder="What's on your mind" class="postCreate" required></textarea>
                     <input type="submit" value="submit" class="create_post_submit_btn">
                 </form>
